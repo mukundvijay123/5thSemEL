@@ -1,0 +1,262 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>{{ vehicle.make }} {{ vehicle.model }} ({{ vehicle.registration_number }})</h2>
+    
+    <!-- Action Items Panel -->
+    <div class="card mb-4">
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-0">Action Items</h4>
+        </div>
+        <div class="card-body" id="actionItems">
+            <!-- Action items will be dynamically populated here -->
+        </div>
+    </div>
+    
+    <div class="row">
+        <!-- Engine Parameters -->
+        <div class="col-md-6">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h4>Engine Parameters</h4>
+                </div>
+                <div class="card-body">
+                    <div class="form-group">
+                        <label for="engineRpm">Engine RPM (0-8000)</label>
+                        <input type="range" class="form-control-range" id="engineRpm" min="0" max="8000" value="1000">
+                        <span id="engineRpmValue">1000 RPM</span>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="oilPressure">Oil Pressure (0-10 PSI)</label>
+                        <input type="range" class="form-control-range" id="oilPressure" min="0" max="10" value="6">
+                        <span id="oilPressureValue">6 PSI</span>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="fuelPressure">Fuel Pressure (0-20 PSI)</label>
+                        <input type="range" class="form-control-range" id="fuelPressure" min="0" max="20" value="18">
+                        <span id="fuelPressureValue">18 PSI</span>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="coolantPressure">Coolant Pressure (0-5 PSI)</label>
+                        <input type="range" class="form-control-range" id="coolantPressure" min="0" max="5" value="4">
+                        <span id="coolantPressureValue">4 PSI</span>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="oilTemp">Oil Temperature (60-100°C)</label>
+                        <input type="range" class="form-control-range" id="oilTemp" min="60" max="100" value="85">
+                        <span id="oilTempValue">85°C</span>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="coolantTemp">Coolant Temperature (55-100°C)</label>
+                        <input type="range" class="form-control-range" id="coolantTemp" min="55" max="100" value="85">
+                        <span id="coolantTempValue">85°C</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Maintenance Parameters -->
+        <div class="col-md-6">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h4>Maintenance Parameters</h4>
+                </div>
+                <div class="card-body">
+                    <div class="form-group">
+                        <label for="airTemp">Air Temperature (290-350K)</label>
+                        <input type="range" class="form-control-range" id="airTemp" min="290" max="350" value="298">
+                        <span id="airTempValue">298K</span>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="processTemp">Process Temperature (200-370K)</label>
+                        <input type="range" class="form-control-range" id="processTemp" min="200" max="370" value="308">
+                        <span id="processTempValue">308K</span>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="rotationSpeed">Rotation Speed (0-3000 RPM)</label>
+                        <input type="range" class="form-control-range" id="rotationSpeed" min="0" max="3000" value="1500">
+                        <span id="rotationSpeedValue">1500 RPM</span>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="torque">Torque (0-100 Nm)</label>
+                        <input type="range" class="form-control-range" id="torque" min="0" max="100" value="40">
+                        <span id="torqueValue">40 Nm</span>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="toolWear">Tool Wear (0-200 min)</label>
+                        <input type="range" class="form-control-range" id="toolWear" min="0" max="200" value="0">
+                        <span id="toolWearValue">0 min</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Control Panel -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <h4>Control Panel</h4>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="custom-control custom-switch">
+                        <input type="checkbox" class="custom-control-input" id="autoSimulation">
+                        <label class="custom-control-label" for="autoSimulation">Auto Simulation</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- JavaScript for handling sliders and updates -->
+<script>
+let autoSimulationInterval;
+
+// Function to update slider value displays
+function updateSliderValue(sliderId, value, unit) {
+    document.getElementById(sliderId + 'Value').textContent = value + ' ' + unit;
+}
+
+// Function to get all parameter values
+function getParameters() {
+    return {
+        engine_rpm: parseFloat(document.getElementById('engineRpm').value),
+        oil_pressure: parseFloat(document.getElementById('oilPressure').value),
+        fuel_pressure: parseFloat(document.getElementById('fuelPressure').value),
+        coolant_pressure: parseFloat(document.getElementById('coolantPressure').value),
+        oil_temperature: parseFloat(document.getElementById('oilTemp').value),
+        coolant_temperature: parseFloat(document.getElementById('coolantTemp').value),
+        air_temperature: parseFloat(document.getElementById('airTemp').value),
+        process_temperature: parseFloat(document.getElementById('processTemp').value),
+        rotation_speed: parseFloat(document.getElementById('rotationSpeed').value),
+        torque: parseFloat(document.getElementById('torque').value),
+        tool_wear: parseFloat(document.getElementById('toolWear').value)
+    };
+}
+
+// Function to update action items
+function updateActionItems(data) {
+    const actionItemsDiv = document.getElementById('actionItems');
+    actionItemsDiv.innerHTML = ''; // Clear previous alerts
+
+    if (data.action_items && data.action_items.length > 0) {
+        let hasCriticalIssues = false;
+
+        data.action_items.forEach(item => {
+            const alertClass = item.severity === 'high' ? 'danger' : 
+                             item.severity === 'medium' ? 'warning' : 'info';
+
+            if (item.severity === 'high') {
+                hasCriticalIssues = true;
+            }
+
+            actionItemsDiv.innerHTML += `
+                <div class="alert alert-${alertClass}" role="alert">
+                    <strong>${item.message}</strong><br>
+                    <small>Recommended Action: ${item.action}</small>
+                </div>
+            `;
+        });
+
+        // If no critical issues but previous message exists, clear it
+        if (!hasCriticalIssues) {
+            actionItemsDiv.innerHTML = '<div class="alert alert-success">No action items - All systems normal</div>';
+        }
+    } else {
+        // If no issues, show success message
+        actionItemsDiv.innerHTML = '<div class="alert alert-success">No action items - All systems normal</div>';
+    }
+}
+
+
+// Function to update vehicle health
+function updateVehicleHealth() {
+    const params = getParameters();
+    
+    fetch('/api/vehicle/{{ vehicle.id }}/health', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(params)
+    })
+    .then(response => response.json())
+    .then(data => {
+        updateActionItems(data);
+    })
+    .catch(error => console.error('Error:', error));
+}
+
+// Set up event listeners for all sliders
+const sliders = {
+    'engineRpm': 'RPM',
+    'oilPressure': 'PSI',
+    'fuelPressure': 'PSI',
+    'coolantPressure': 'PSI',
+    'oilTemp': '°C',
+    'coolantTemp': '°C',
+    'airTemp': 'K',
+    'processTemp': 'K',
+    'rotationSpeed': 'RPM',
+    'torque': 'Nm',
+    'toolWear': 'min'
+};
+
+Object.entries(sliders).forEach(([id, unit]) => {
+    const slider = document.getElementById(id);
+    slider.addEventListener('input', () => {
+        updateSliderValue(id, slider.value, unit);
+    });
+    slider.addEventListener('change', updateVehicleHealth);  // ✅ Ensure all sliders trigger updates
+});
+
+// Auto simulation toggle
+// Auto simulation toggle
+document.getElementById('autoSimulation').addEventListener('change', function(e) {
+    if (e.target.checked) {
+        // Start auto simulation
+        autoSimulationInterval = setInterval(() => {
+            // Randomly adjust parameters
+            Object.keys(sliders).forEach(id => {
+                const slider = document.getElementById(id);
+                const range = slider.max - slider.min;
+                
+                // Generate a new value within a range
+                let newValue = parseFloat(slider.value) + (Math.random() - 0.5) * range * 0.1;
+                newValue = Math.max(slider.min, Math.min(slider.max, newValue));
+
+                slider.value = newValue.toFixed(1); // Update slider value
+                updateSliderValue(id, newValue.toFixed(1), sliders[id]); // Update display
+
+                // Manually trigger change event to update vehicle health
+                slider.dispatchEvent(new Event('change'));
+            });
+        }, 2000);
+    } else {
+        // Stop auto simulation
+        clearInterval(autoSimulationInterval);
+    }
+});
+
+
+// Find nearby garages button
+document.getElementById('findGarages').addEventListener('click', function() {
+    // Add your garage search functionality here
+});
+
+// Initial update
+updateVehicleHealth();
+</script>
+{% endblock %}

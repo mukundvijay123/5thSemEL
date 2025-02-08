@@ -1,0 +1,56 @@
+# Python
+__pycache__/
+*.py[cod]
+*.so
+*.egg-info/
+*.egg
+*.pyo
+*.pyd
+.DS_Store
+.env
+.venv/
+venv/
+*.log
+*.sqlite3
+.mypy_cache/
+.pytest_cache/
+
+# Virtual environments
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Jupyter Notebooks
+.ipynb_checkpoints/
+
+# JavaScript/Node.js
+node_modules/
+npm-debug.log*
+yarn-error.log
+yarn-debug.log
+pnpm-debug.log
+dist/
+build/
+.cache/
+
+# TypeScript
+*.tsbuildinfo
+
+# Logs
+logs
+*.log
+yarn-debug.log*
+yarn-error.log*
+
+# IDEs and Editors
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.swp
+*.bak
+
+# OS files
+Thumbs.db
+.DS_Store
